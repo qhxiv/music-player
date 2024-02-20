@@ -1,0 +1,120 @@
+body {
+  background-color: whitesmoke;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+html {
+  font-family: "Roboto";
+}
+
+.app {
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 8px;
+  padding: 32px 24px;
+  width: 300px;
+  min-height: 500px;
+}
+
+.top-bar {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.list i {
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.list i:hover {
+  opacity: 0.6;
+}
+
+.content {
+  margin-top: 16px;
+}
+
+.content__img {
+  height: 300px;
+}
+
+.content__title,
+.content__author {
+  text-align: center;
+  margin: 4px 0;
+}
+
+.content__title {
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.content__author {
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.buttons {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+}
+
+.buttons * {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.buttons *:hover {
+  opacity: 0.9
+}
+
+.buttons * i {
+  font-size: 20px;
+}
+
+.buttons__shuffle,
+.buttons__repeat {
+  color: gray;
+}
+
+.buttons__play i {
+  font-size: 40px;
+}
+
+.progress {
+  margin-top: 24px;
+}
+
+.progress__background {
+  width: 100%;
+  background: lightgray;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.progress__fill {
+  background-color: black;
+  border-radius: 4px;
+}
+
+.progress__duration {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.progress__duration * {
+  margin: 0;
+  font-size: 14px;
+}
+
+.progress__bar {
+  
+}
