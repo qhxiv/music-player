@@ -11,31 +11,18 @@ html {
 }
 
 .app {
+  position: relative;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 8px;
-  padding: 32px 24px;
+  padding: 24px 24px;
+  overflow: hidden;
   width: 300px;
   min-height: 500px;
 }
 
-.top-bar {
-  display: flex;
-  flex-direction: row-reverse;
-}
-
-.list i {
-  font-size: 15px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.list i:hover {
-  opacity: 0.6;
-}
-
 .content {
-  margin-top: 16px;
+
 }
 
 .content__img {
@@ -59,11 +46,10 @@ html {
 }
 
 .buttons {
-  margin-top: 24px;
+  margin-top: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 32px;
 }
 
 .buttons * {
@@ -71,12 +57,16 @@ html {
   transition: opacity 0.2s ease;
 }
 
-.buttons *:hover {
-  opacity: 0.9
+.buttons > *:hover {
+  opacity: 0.85
 }
 
 .buttons * i {
   font-size: 20px;
+}
+
+.buttons__volume::before {
+  
 }
 
 .buttons__shuffle,
@@ -112,9 +102,128 @@ html {
 
 .progress__duration * {
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .progress__bar {
   
+}
+
+.list {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  /* display: flex; */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1 }
+  to { opacity: 0 }
+}
+
+.list__overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(70%);
+    opacity: 0;
+  }
+  to {
+    transform:translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {}
+  to {
+    transform: translateY(60%);
+    opacity: 0;
+  }
+}
+
+.list__main {
+  z-index: 1;
+  margin-top: auto;
+  width: 100%;
+  height: 70%;
+  background: whitesmoke;
+  animation: slideIn 0.5s ease;
+}
+
+.list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+  padding: 12px;
+  background: white;
+}
+
+.list__header p {
+  margin: 0;
+  font-size: 18px;
+}
+
+.list__header i {
+  transition: opacity 0.2s ease;
+  font-size: 18px;
+}
+
+.list__header i:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.song {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  transition: background 0.2s ease;
+}
+
+.song:hover {
+  background: rgb(224, 224, 224);
+  cursor: pointer;
+}
+
+.song__img,
+.song__img img {
+  height: 100%;
+}
+
+.song__img {
+  margin-right: 8px;
+}
+
+.song__detail *,
+.song__duration {
+  font-size: 13px;
+  margin: 0;
+}
+
+.song__author {
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 4px;
+}
+
+.song__duration {
+  margin-left: auto;
 }

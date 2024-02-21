@@ -12,11 +12,6 @@
 </head>
 <body>
   <div class="app">
-    <div class="top-bar">
-      <div class="list">
-        <i class="fa-solid fa-bars"></i>
-      </div>
-    </div>
 
     <div class="content">
       <img src="./assets/images/img1.jpg" alt="" class="content__img">
@@ -25,24 +20,32 @@
     </div>
 
     <div class="buttons">
+      <div class="buttons__volume">
+        <i class="fa-fw fa-solid fa-volume-high"></i>
+      </div>
+
       <div class="buttons__shuffle">
-        <i class="fa-solid fa-shuffle"></i>
+        <i class="fa-fw fa-solid fa-shuffle"></i>
       </div>
 
       <div class="buttons__prev">
-        <i class="fa-solid fa-backward-step"></i>
+        <i class="fa-fw fa-solid fa-backward-step"></i>
       </div>
 
       <div class="buttons__play">
-        <i class="fa-solid fa-circle-pause"></i>
+        <i class="fa-fw fa-solid fa-circle-pause"></i>
       </div>
 
       <div class="buttons__next">
-        <i class="fa-solid fa-forward-step"></i>
+        <i class="fa-fw fa-solid fa-forward-step"></i>
       </div>
 
       <div class="buttons__repeat">
-        <i class="fa-solid fa-repeat"></i>
+        <i class="fa-fw fa-solid fa-repeat"></i>
+      </div>
+
+      <div class="buttons__list">
+        <i class="fa-fw fa-solid fa-bars"></i>
       </div>
     </div>
 
@@ -54,6 +57,28 @@
       <div class="progress__duration">
         <p class="progress__current">00:00</p>
         <p class="progress__total">05:00</p>
+      </div>
+    </div>
+
+    <div class="list">
+      <div class="list__overlay"></div>
+
+      <div class="list__main">
+        <div class="list__header">
+          <p>Next up</p>
+          <i class="fa-solid fa-xmark"></i>
+        </div>
+
+        <div class="song">
+          <div class="song__img">
+            <img src="./assets/images/img1.jpg" alt="">
+          </div>
+          <div class="song__detail">
+            <p class="song__author">NAV</p>
+            <p class="song__title">Myself</p>
+          </div>
+          <div class="song__duration">3:49</div>
+        </div>
       </div>
     </div>
   </div>
