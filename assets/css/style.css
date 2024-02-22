@@ -82,11 +82,9 @@ html {
   flex-direction: column;
   bottom: 100%;
   overflow: hidden;
-  transition: display 0.2s ease;
 }
 
 .volume:hover .volume__panel{
-  transition: all ease 0.2s;
   transform: translateY(0);
   opacity: 1;
 }
@@ -172,6 +170,25 @@ html {
   background-color: black;
   border-radius: 4px;
   height: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.progress__fill::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: black;
+  right: -4px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.progress__background:hover .progress__fill::after {
+  opacity: 1;
 }
 
 .progress__duration {
