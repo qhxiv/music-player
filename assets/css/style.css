@@ -75,12 +75,20 @@ html {
   background: transparent;
   position: absolute;
   width: calc(100% + 20px);
-  display: none;
+  display: flex;
+  pointer-events: none;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   bottom: 100%;
   overflow: hidden;
+  transition: display 0.2s ease;
+}
+
+.volume:hover .volume__panel{
+  transition: all ease 0.2s;
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .volume__panel {
@@ -94,6 +102,10 @@ html {
   justify-content: center;
   padding: 8px 0;
   margin-bottom: 12px;
+  transform: translateY(70%);
+  opacity: 0;
+  transition: all ease 0.2s;
+  pointer-events: all;
 }
 
 .volume__panel::after {
@@ -159,6 +171,7 @@ html {
 .progress__fill {
   background-color: black;
   border-radius: 4px;
+  height: 4px;
 }
 
 .progress__duration {

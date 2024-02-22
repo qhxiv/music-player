@@ -22,22 +22,7 @@ function handleListAnimation() {
 }
 
 function handleVolumeButton() {
-  const volBtn = document.querySelector('.volume');
-  console.log(volBtn);
-  const volWrapper = document.querySelector('.volume__wrapper');
-  const volPanel = document.querySelector('.volume__panel');
 
-  volBtn.addEventListener('mouseover', (e) => {
-    volWrapper.style.display = 'flex';
-    volPanel.style.animation = 'slideIn 0.2s ease';
-  });
-
-  volBtn.addEventListener('mouseout', (e) => {
-    volPanel.style.animation = 'slideOut 0.2s ease forwards';
-    setTimeout(() => {
-      volWrapper.style.display = 'none';
-    }, 200);
-  });
 }
 
 function start() {
