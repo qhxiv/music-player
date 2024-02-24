@@ -93,11 +93,8 @@ html {
   position: relative;
   background-color: white;
   height: 100px;
-  width: calc(100% - 12px);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 4px;
-  display: flex;
-  justify-content: center;
   padding: 8px 0;
   margin-bottom: 12px;
   transform: translateY(70%);
@@ -109,18 +106,22 @@ html {
 .volume__panel::after {
   content: '';
   position: absolute;
-  top: 100%;
   border: 8px solid;
   border-color: white transparent transparent transparent;
   top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .volume__bar {
+  padding: 0 14px;
   width: 4px;
-  background: lightgray;
+  background-color: lightgray;
+  background-clip: content-box;
   height: 100%;
   border-radius: 2px;
   display: flex;
+  
   cursor: pointer;
 }
 
@@ -161,7 +162,9 @@ html {
 
 .progress__background {
   width: 100%;
-  background: lightgray;
+  background-color: lightgray;
+  background-clip: content-box;
+  padding: 4px 0;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -281,6 +284,7 @@ html {
 .list__header i {
   transition: opacity 0.2s ease;
   font-size: 18px;
+  padding: 8px;
 }
 
 .list__header i:hover {
@@ -308,6 +312,31 @@ html {
 
 .song__img {
   margin-right: 8px;
+  position: relative;
+}
+
+.song__play {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.song__play i {
+  font-size: 22px;
+  color: white;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.song__play i:hover {
+  filter: brightness(80%);
+}
+
+.song:hover .song__play i {
+  opacity: 1;
 }
 
 .song__detail *,

@@ -25,9 +25,20 @@ function handleVolumeButton() {
 
 }
 
+function handleVolumeButton() {
+  const playBtn = document.querySelector('.play');
+  console.log(playBtn);
+}
+
+function renderSongs() {
+  
+}
+
 function start() {
+  renderSongs();
   handleListAnimation();
   handleVolumeButton();
+  handlePlayButton();
 }
 
 start();
