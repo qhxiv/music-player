@@ -53,12 +53,12 @@ html {
 }
 
 .buttons * {
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .buttons > *:hover i {
   cursor: pointer;
-  opacity: 0.85
+  opacity: 0.75
 }
 
 .buttons * i {
@@ -97,8 +97,8 @@ html {
   border-radius: 4px;
   padding: 8px 0;
   margin-bottom: 12px;
-  transform: translateY(70%);
-  opacity: 0;
+  /* transform: translateY(70%);
+  opacity: 0; */
   transition: all ease 0.2s;
   pointer-events: all;
 }
@@ -121,7 +121,6 @@ html {
   height: 100%;
   border-radius: 2px;
   display: flex;
-  
   cursor: pointer;
 }
 
@@ -265,6 +264,9 @@ html {
   height: 70%;
   background: whitesmoke;
   animation: slideIn 0.5s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .list__header {
@@ -274,6 +276,9 @@ html {
   border-bottom: 1px solid lightgray;
   padding: 12px;
   background: white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .list__header p {
@@ -292,6 +297,10 @@ html {
   cursor: pointer;
 }
 
+.list__content {
+  overflow: scroll;
+}
+
 .song {
   height: 32px;
   display: flex;
@@ -305,14 +314,25 @@ html {
   cursor: pointer;
 }
 
+.song.song--playing {
+  background: rgb(224, 224, 224);
+  i {
+    opacity: 1;
+  }
+}
+
 .song__img,
 .song__img img {
   height: 100%;
 }
 
 .song__img {
+  width: 32px;
+  overflow: hidden;
   margin-right: 8px;
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .song__play {

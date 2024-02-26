@@ -14,7 +14,7 @@
   <div class="app">
 
     <div class="content">
-      <img src="./assets/images/img1.jpg" alt="" class="content__img">
+      <img src="./assets/images/img1.png" alt="" class="content__img">
       <h2 class="content__title">Myself</h2>
       <p class="content__author">NAV</p>
     </div>
@@ -41,7 +41,7 @@
       </div>
 
       <div class="play">
-        <i class="fa-fw fa-solid fa-circle-pause"></i>
+        <i class="fa-fw fa-solid fa-circle-play"></i>
       </div>
 
       <div class="next">
@@ -63,10 +63,12 @@
       </div>
 
       <div class="progress__duration">
-        <p class="progress__current">00:00</p>
-        <p class="progress__total">05:00</p>
+        <p class="progress__current"></p>
+        <p class="progress__total"></p>
       </div>
     </div>
+
+    <audio></audio>
 
     <div class="list">
       <div class="list__overlay"></div>
@@ -77,24 +79,11 @@
           <i class="fa-solid fa-xmark"></i>
         </div>
 
-        <div class="song">
-          <div class="song__img">
-            <div class="song__play">
-              <i class="fa-solid fa-circle-play"></i>
-            </div>
-            <img src="./assets/images/img1.jpg" alt="">
-          </div>
-          <div class="song__detail">
-            <p class="song__author">NAV</p>
-            <p class="song__title">Myself</p>
-          </div>
-          <div class="song__duration">3:49</div>
-        </div>
-
+        <div class="list__content"></div>
       </div>
     </div>
   </div>
   
-  <script src="./assets/javascript/main.js"></script>
+  <script src="./assets/javascript/main.js" type="module"></script>
 </body>
 </html>
