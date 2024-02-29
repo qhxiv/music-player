@@ -93,16 +93,12 @@ function loadAudio() {
 }
 
 function handleVolumeButton() {
-  const volumePanel = document.querySelector('.volume__panel');
-  const volumeFill = document.querySelector('.volume__fill');
+  const volumeBar = document.querySelector('.volume__bar');
   
-  volumePanel.addEventListener('mouseup', (e) => {
-    volumePanel.onmousedown = () => {
-      volumePanel.onmousemove = (e) => {
-        console.log(e);
-      }
-    }
-  });
+  volumeBar.value = audio.volume * 100;
+  volumeBar.oninput = () => {
+    audio.volume = volumeBar.value / 100;
+  };
 }
 
 function start() {
