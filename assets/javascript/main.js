@@ -92,13 +92,26 @@ function loadAudio() {
   });
 }
 
-function handleVolumeButton() {
-  const volumeBar = document.querySelector('.volume__bar');
+function handleProgressBar() {
+  const progressBar = document.querySelector('.progress__bar');
+  const progressFill = document.querySelector('.progress__fill');
+  let isMouseDown = false;
+
+  let updateBar = (e) => {
+    let currentValue = e.offsetLeft / progressBar.clientWidth * 100;
+    progressFill.style.width = currentValue + '%';
+  }
   
-  volumeBar.value = audio.volume * 100;
-  volumeBar.oninput = () => {
-    audio.volume = volumeBar.value / 100;
-  };
+  progressBar.addEventListener('mousedown', (e) => {
+    isMouseDown = true;
+    updateBar(e);
+  });
+  progressBar.addEventListener('mousemove', (e) => {
+    if (isMouseDown) {
+      updateBar(e);
+    }
+  });
+  progressBar.addEventListener('mouseup', () => { isMouseDown = false });
 }
 
 function start() {
@@ -106,7 +119,7 @@ function start() {
   handleListAnimation();
   loadAudio();
   handlePlayButton();
-  handleVolumeButton();
+  handleProgressBar();
 }
 
 start();
