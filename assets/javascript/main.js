@@ -2,13 +2,41 @@ import songs from './songs.js';
 
 const listContent = document.querySelector('.list__content');
 const audio = document.querySelector('audio');
-const currentTime = document.querySelector('.progress__current');
-const duration = document.querySelector('.progress__total');
+const currentAudioTime = document.querySelector('.progress__current');
+const playBtn = document.querySelector('.play');
 
+let interval;
 let currentIndex = 0;
 let oldIndex = 0;
 
 audio.volume = 0.5;
+
+function renderSongs() {
+  songs.forEach((song, index) => {
+    const songElement = document.createElement('div');
+    songElement.className = `song song${index}`;
+    songElement.innerHTML = `
+      <div class="song__img">
+        <div class="song__play">
+          <i class="fa-solid fa-circle-play"></i>
+        </div>
+        <img src="${song.image}" alt="">
+      </div>
+      <div class="song__detail">
+        <p class="song__author">${song.author}</p>
+        <p class="song__title">${song.name}</p>
+      </div>
+      <div class="song__duration"></div>
+    `;
+    listContent.appendChild(songElement);
+
+    let audio = document.createElement('audio');
+    audio.src = song.path;
+    audio.addEventListener('loadeddata', () => {
+      songElement.querySelector('.song__duration').innerHTML = formatDuration(audio.duration);
+    });
+  });
+}
 
 function handleListAnimation() {
   const mainList = document.querySelector('.list__main');
@@ -41,39 +69,20 @@ function formatDuration(sec) {
   return `${min}:${sec}`;
 }
 
-function renderSongs() {
-  songs.forEach((song, index) => {
-    const songElement = document.createElement('div');
-    songElement.className = `song song${index}`;
-    songElement.innerHTML = `
-      <div class="song__img">
-        <div class="song__play">
-          <i class="fa-solid fa-circle-play"></i>
-        </div>
-        <img src="${song.image}" alt="">
-      </div>
-      <div class="song__detail">
-        <p class="song__author">${song.author}</p>
-        <p class="song__title">${song.name}</p>
-      </div>
-      <div class="song__duration"></div>
-    `;
-    listContent.appendChild(songElement);
-
-    let audio = document.createElement('audio');
-    audio.src = song.path;
-    audio.addEventListener('loadeddata', () => {
-      songElement.querySelector('.song__duration').innerHTML = formatDuration(audio.duration);
-    });
-  });
+function syncAudioTimeWithProgressBar() {
+  return setInterval(() => {
+    let cur = audio.currentTime;
+    document.querySelector('.progress__fill').style.width = cur / audio.duration * 100 + '%';
+    currentAudioTime.innerHTML = formatDuration(cur);
+  }, 100);
 }
 
 function handlePlayButton() {
-  const playBtn = document.querySelector('.play');
   playBtn.onclick = () => {
     if (audio.paused) {
       playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
       audio.play();
+      interval = syncAudioTimeWithProgressBar();
     } else {
       playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-play"></i>';
       audio.pause();
@@ -83,43 +92,75 @@ function handlePlayButton() {
 
 function loadAudio() {
   document.querySelector(`.song${oldIndex}`).classList.remove('song--playing');
-  const currentSong = document.querySelector(`.song${currentIndex}`);
-  currentSong.classList.add('song--playing');
-  currentTime.innerHTML = '0:00';
+  document.querySelector(`.song${currentIndex}`).classList.add('song--playing');
+  currentAudioTime.innerHTML = '0:00';
   audio.src = songs[currentIndex].path;
   audio.addEventListener('loadeddata', () => {
-    duration.innerHTML = formatDuration(audio.duration);
+    document.querySelector('.progress__total').innerHTML = formatDuration(audio.duration);
+    handleProgressBar(audio.duration);
   });
 }
 
-function handleProgressBar() {
-  const progressBar = document.querySelector('.progress__bar');
-  const progressFill = document.querySelector('.progress__fill');
+// handleProgressBar() function get the duration of the current song from the loadAudio() function above
+function handleProgressBar(duration) {
+  const cover = document.querySelector('.progress__cover');
+  const bar = document.querySelector('.progress__bar');
+  const fill = document.querySelector('.progress__fill');
+
   let isMouseDown = false;
 
   let updateBar = (e) => {
-    let currentValue = e.offsetLeft / progressBar.clientWidth * 100;
-    progressFill.style.width = currentValue + '%';
-  }
-  
-  progressBar.addEventListener('mousedown', (e) => {
+    let cur = e.clientX - bar.getBoundingClientRect().x;
+    let percentage = cur / bar.clientWidth * 100;
+
+    if (percentage < 0) percentage = 0;
+    else if (percentage > 100) percentage = 100;
+    
+    fill.style.width = percentage + '%';
+    
+    audio.currentTime = duration * percentage / 100;
+  };
+
+  let expandCover = () => {
+    cover.style.position = 'fixed';
+    cover.style.height = '100vh';
+  };
+
+  let shrinkCover = () => {
+    cover.style.position = 'absolute';
+    cover.style.height = '20px';
+  };
+
+  cover.addEventListener('mousedown', (e) => {
     isMouseDown = true;
+    expandCover();
+    audio.pause();
     updateBar(e);
   });
-  progressBar.addEventListener('mousemove', (e) => {
+
+  cover.addEventListener('mousemove', (e) => {
     if (isMouseDown) {
       updateBar(e);
     }
   });
-  progressBar.addEventListener('mouseup', () => { isMouseDown = false });
+
+  cover.addEventListener('mouseup', (e) => {
+    isMouseDown = false;
+    if (playBtn.querySelector('i').classList.contains('fa-circle-pause'))
+      audio.play();
+    else {
+      
+    }
+    shrinkCover();
+  });
 }
 
 function start() {
   renderSongs();
-  handleListAnimation();
   loadAudio();
+  // handleProgressBar() is called inside loadAudio() function because i need to get the audio duration
+  handleListAnimation();
   handlePlayButton();
-  handleProgressBar();
 }
 
 start();

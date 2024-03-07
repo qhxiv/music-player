@@ -81,19 +81,32 @@ html {
 }
 
 .progress {
-  margin-top: 24px;
+  position: relative;
+  margin-top: 16px;
+  padding-top: 8px;
+}
+
+.progress__cover {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  cursor: pointer;
 }
 
 .progress__bar {
+  position: relative;
+  background-clip: content-box;
+  cursor: pointer;
   background-color: lightgray;
   border-radius: 4px;
   height: 4px;
-  cursor: pointer;
 }
 
 .progress__fill {
   background-color: black;
-  width: 50%;
   height: 100%;
   border-radius: 4px;
   position: relative;
@@ -113,7 +126,7 @@ html {
   transition: opacity ease .2s;
 }
 
-.progress__bar:hover .progress__thumb {
+.progress__cover:hover + .progress__bar .progress__thumb {
   opacity: 1;
 }
 
