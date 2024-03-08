@@ -25,6 +25,12 @@ html {
 
 }
 
+.content__wrapper {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
 .content__img {
   height: 300px;
 }
@@ -76,15 +82,14 @@ html {
   position: absolute;
   bottom: 100%;
   overflow: hidden;
-  display: flex;
+  display: none;
   justify-content: center;
   height: 150px;
   width: 50px;
 }
 
 .volume__panel {
-  display: none;
-  /* display: flex; */
+  display: flex;
   justify-content: center;
   background: white;
   position: absolute;
@@ -291,7 +296,7 @@ html {
 }
 
 .list__content {
-  overflow: scroll;
+  overflow: auto;
 }
 
 .song {
