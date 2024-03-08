@@ -7,17 +7,18 @@ const playBtn = document.querySelector('.play');
 
 let currentIndex = 0;
 let oldIndex = 0;
+let maxIndex = songs.length - 1;
 let repeatStatus = 'off';
 
 function togglePlayBtn() {
   const playingSong = document.querySelector('.song--playing');
 
   if (audio.paused) {
-    playingSong.querySelector('i').className = 'fa-solid fa-circle-pause';
+    playingSong.querySelector('i').className = 'fa-solid fa-pause';
     playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
     audio.play();
   } else {
-    playingSong.querySelector('i').className = 'fa-solid fa-circle-play';
+    playingSong.querySelector('i').className = 'fa-solid fa-play';
     playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-play"></i>';
     audio.pause();
   }   
@@ -30,7 +31,7 @@ function renderSongs() {
     songElement.innerHTML = `
       <div class="song__img">
         <div class="song__play">
-          <i class="fa-solid fa-circle-play"></i>
+          <i class="fa-solid fa-play"></i>
         </div>
         <img src="${song.image}" alt="">
       </div>
@@ -47,7 +48,7 @@ function renderSongs() {
       else {
         const playingSong = document.querySelector('.song--playing');
         oldIndex = parseInt(playingSong.classList[1].substring(4));
-        playingSong.querySelector('i').className = 'fa-solid fa-circle-play';
+        playingSong.querySelector('i').className = 'fa-solid fa-play';
         currentIndex = index;
         loadAudio();
         togglePlayBtn();
@@ -238,6 +239,28 @@ function handleVolumeButton() {
   });
 }
 
+function handleNextButton() {
+  document.querySelector('.next').onclick = () => {
+    oldIndex = currentIndex;
+    if (currentIndex === maxIndex) currentIndex = 0;
+    else ++currentIndex;
+    loadAudio();
+    playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+    audio.play();
+  };
+}
+
+function handlePreviousButton() {
+  document.querySelector('.prev').onclick = () => {
+    oldIndex = currentIndex;
+    if (currentIndex === 0) currentIndex = maxIndex;
+    else --currentIndex;
+    loadAudio();
+    playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+    audio.play();
+  };
+}
+
 function start() {
   renderSongs();
   loadAudio();
@@ -245,6 +268,8 @@ function start() {
   handleVolumeButton();
   handleListAnimation();
   handlePlayButton();
+  handleNextButton();
+  handlePreviousButton();
 }
 
 start();
