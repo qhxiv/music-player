@@ -69,6 +69,95 @@ html {
   position: relative;
   display: flex;
   justify-content: center;
+  
+}
+
+.volume__clip {
+  position: absolute;
+  bottom: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  height: 150px;
+  width: 50px;
+}
+
+.volume__panel {
+  display: none;
+  /* display: flex; */
+  justify-content: center;
+  background: white;
+  position: absolute;
+  bottom: 0;
+  box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px;
+  border-radius: 4px;
+  padding: 8px 0;
+  width: 32px;
+  height: 100px;
+  margin-bottom: 12px;
+}
+
+.volume__panel::after {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border: 8px solid;
+  border-color: white transparent transparent transparent;
+  top: 100%;
+}
+
+.volume__wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.volume__cover {
+  cursor: pointer;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.volume__bar {
+  position: relative;
+  background-color: lightgray;
+  width: 4px;
+  height: 100%;
+  background-clip: content-box;
+  border-radius: 4px;
+}
+
+.volume__fill {
+  position: absolute;
+  border-radius: 4px;
+  bottom: 0;
+  background-color: black;
+  width: 100%;
+  display: flex;
+  transition: none;
+  justify-content: center;
+}
+
+.volume__thumb {
+  position: absolute;
+  transform: translateY(-50%);
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background-color: black;
+  opacity: 0;
+  transition: opacity ease .2s;
+}
+
+.volume__cover:hover + .volume__bar .volume__thumb {
+  opacity: 1;
 }
 
 .shuffle,
@@ -151,16 +240,6 @@ html {
   /* display: flex; */
 }
 
-@keyframes fadeIn {
-  from { opacity: 0 }
-  to { opacity: 1 }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1 }
-  to { opacity: 0 }
-}
-
 .list__overlay {
   position: absolute;
   top: 0;
@@ -169,25 +248,6 @@ html {
   left: 0;
   background-color: rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.5s ease;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(70%);
-    opacity: 0;
-  }
-  to {
-    transform:translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideOut {
-  from {}
-  to {
-    transform: translateY(70%);
-    opacity: 0;
-  }
 }
 
 .list__main {

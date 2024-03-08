@@ -5,11 +5,8 @@ const audio = document.querySelector('audio');
 const currentAudioTime = document.querySelector('.progress__current');
 const playBtn = document.querySelector('.play');
 
-let interval;
 let currentIndex = 0;
 let oldIndex = 0;
-
-audio.volume = 0.5;
 
 function renderSongs() {
   songs.forEach((song, index) => {
@@ -69,20 +66,11 @@ function formatDuration(sec) {
   return `${min}:${sec}`;
 }
 
-function syncAudioTimeWithProgressBar() {
-  return setInterval(() => {
-    let cur = audio.currentTime;
-    document.querySelector('.progress__fill').style.width = cur / audio.duration * 100 + '%';
-    currentAudioTime.innerHTML = formatDuration(cur);
-  }, 100);
-}
-
 function handlePlayButton() {
   playBtn.onclick = () => {
     if (audio.paused) {
       playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
       audio.play();
-      interval = syncAudioTimeWithProgressBar();
     } else {
       playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-play"></i>';
       audio.pause();
@@ -91,13 +79,21 @@ function handlePlayButton() {
 }
 
 function loadAudio() {
-  document.querySelector(`.song${oldIndex}`).classList.remove('song--playing');
-  document.querySelector(`.song${currentIndex}`).classList.add('song--playing');
   currentAudioTime.innerHTML = '0:00';
   audio.src = songs[currentIndex].path;
+  
+  document.querySelector(`.song${oldIndex}`).classList.remove('song--playing');
+  document.querySelector(`.song${currentIndex}`).classList.add('song--playing');
+
   audio.addEventListener('loadeddata', () => {
     document.querySelector('.progress__total').innerHTML = formatDuration(audio.duration);
     handleProgressBar(audio.duration);
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    let cur = audio.currentTime;
+    document.querySelector('.progress__fill').style.width = cur / audio.duration * 100 + '%';
+    currentAudioTime.innerHTML = formatDuration(cur);
   });
 }
 
@@ -148,10 +144,79 @@ function handleProgressBar(duration) {
     isMouseDown = false;
     if (playBtn.querySelector('i').classList.contains('fa-circle-pause'))
       audio.play();
-    else {
-      
-    }
     shrinkCover();
+  });
+}
+
+function handleVolumeButton() {
+  const volumeBtn = document.querySelector('.volume');
+  const icon = volumeBtn.querySelector('i');
+  const panel = document.querySelector('.volume__panel');
+  const fill = document.querySelector('.volume__fill');
+  const cover = document.querySelector('.volume__cover');
+  const bar = document.querySelector('.volume__bar');
+  const clip = document.querySelector('.volume__clip');
+
+  let isMouseDown = false;
+  let oldVolume;
+  audio.volume = .5;
+  audio.onvolumechange = () => { fill.style.height = audio.volume * 100 + '%' };
+
+  cover.addEventListener('click', (e) => e.stopPropagation());
+
+  volumeBtn.onclick = () => {
+    if (audio.volume === 0) {
+      icon.className = 'fa-fw fa-solid fa-volume-high';
+      audio.volume = oldVolume;
+    } else {
+      oldVolume = audio.volume;
+      audio.volume = 0;
+      icon.className = 'fa-fw fa-solid fa-volume-xmark';
+    }
+  };
+  
+  volumeBtn.onmouseover = () => {
+    panel.style.display = 'flex';
+    panel.style.animation = 'slideIn .3s ease';
+  };
+
+  volumeBtn.onmouseleave = () => {
+    panel.style.animation = 'slideOut .3s ease';
+    setTimeout(() => {
+      panel.style.display = 'none';
+    }, 300);
+  };
+
+  let updateVolume = (e) => {
+    let total = bar.clientHeight;
+    let cur = total - (e.clientY - bar.getBoundingClientRect().y);
+    if (cur < 0) cur = 0;
+    else if (cur > 100) cur = 100;
+
+    if (cur === 0)
+      icon.className = 'fa-fw fa-solid fa-volume-xmark';
+    else icon.className = 'fa-fw fa-solid fa-volume-high';
+    
+    fill.style.height = cur + '%';
+    audio.volume = cur / 100;
+  };
+
+  cover.addEventListener('mousedown', (e) => {
+    isMouseDown = true;
+    clip.style.overflow = 'visible';
+    cover.style.position = 'fixed';
+    updateVolume(e);
+  });
+
+  cover.addEventListener('mousemove', (e) => {
+    if (isMouseDown)
+      updateVolume(e);
+  });
+
+  cover.addEventListener('mouseup', (e) => {
+    isMouseDown = false;
+    clip.style.overflow = 'hidden';
+    cover.style.position = 'absolute';
   });
 }
 
@@ -159,6 +224,7 @@ function start() {
   renderSongs();
   loadAudio();
   // handleProgressBar() is called inside loadAudio() function because i need to get the audio duration
+  handleVolumeButton();
   handleListAnimation();
   handlePlayButton();
 }
