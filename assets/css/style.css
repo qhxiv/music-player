@@ -170,6 +170,28 @@ html {
   color: gray;
 }
 
+.repeat {
+  position: relative;
+}
+
+.repeat::after {
+  content: '1';
+  opacity: var(--repeatOneIconOpacity, 0);
+  position: absolute;
+  height: 12px;
+  width: 12px;
+  font-size: 10px;
+  line-height: 12px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: black;
+  color: white;
+  right: 0;
+  bottom: 0;
+  transition: opacity .2s ease;
+  cursor: pointer;
+}
+
 .play i {
   font-size: 40px;
 }

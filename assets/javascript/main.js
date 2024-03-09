@@ -96,10 +96,6 @@ function formatDuration(sec) {
   return `${min}:${sec}`;
 }
 
-function handlePlayButton() {
-  playBtn.onclick = togglePlayBtn;
-}
-
 function loadAudio() {
   const currentSong = songs[currentIndex];
   currentAudioTime.innerHTML = '0:00';
@@ -239,25 +235,61 @@ function handleVolumeButton() {
   });
 }
 
-function handleNextButton() {
-  document.querySelector('.next').onclick = () => {
+function nextSong() {
+  if (currentIndex !== maxIndex) {
     oldIndex = currentIndex;
-    if (currentIndex === maxIndex) currentIndex = 0;
-    else ++currentIndex;
+    ++currentIndex;
+    loadAudio();
+    playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+    audio.play(); 
+  }
+}
+
+function previousSong() {
+  if (currentIndex !== 0) {
+    oldIndex = currentIndex;
+    --currentIndex;
     loadAudio();
     playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
     audio.play();
+  }
+}
+
+function handleRepeatButton() {
+  const repeatBtn = document.querySelector('.repeat');
+
+  repeatBtn.onclick = () => {
+    if (repeatStatus === 'off') {
+      repeatStatus = 'one';
+      repeatBtn.style.color = 'black';
+      repeatBtn.style.setProperty('--repeatOneIconOpacity', '100');
+    } else if (repeatStatus === 'one') {
+      repeatStatus = 'all';
+      repeatBtn.style.setProperty('--repeatOneIconOpacity', '0');
+    } else {
+      repeatStatus = 'off';
+      repeatBtn.style.color = 'gray';
+    }
   };
 }
 
-function handlePreviousButton() {
-  document.querySelector('.prev').onclick = () => {
-    oldIndex = currentIndex;
-    if (currentIndex === 0) currentIndex = maxIndex;
-    else --currentIndex;
-    loadAudio();
-    playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
-    audio.play();
+function handleAutoPlay() {
+  audio.onended = () => {
+    if (repeatStatus === 'off') {
+      if (currentIndex === maxIndex)
+        playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-play"></i>';
+      else nextSong();
+    } else if (repeatStatus === 'one') {
+      playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+      audio.currentTime = 0;
+      audio.play();
+    } else if (currentIndex === maxIndex) {
+      oldIndex = maxIndex;
+      currentIndex = 0;
+      loadAudio();
+      playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+      audio.play();
+    }
   };
 }
 
@@ -265,11 +297,13 @@ function start() {
   renderSongs();
   loadAudio();
   // handleProgressBar() is called inside loadAudio() function because i need to get the audio duration
+  handleRepeatButton();
+  handleAutoPlay();
   handleVolumeButton();
   handleListAnimation();
-  handlePlayButton();
-  handleNextButton();
-  handlePreviousButton();
+  playBtn.onclick = togglePlayBtn;
+  document.querySelector('.next').onclick = nextSong;
+  document.querySelector('.prev').onclick = previousSong;
 }
 
 start();
