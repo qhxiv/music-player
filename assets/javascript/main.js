@@ -171,27 +171,38 @@ function handleVolumeButton() {
   const bar = document.querySelector('.volume__bar');
   const clip = document.querySelector('.volume__clip');
 
+  if (localStorage.getItem('volume') === null)
+    localStorage.setItem('volume', .5);
+
   let isMouseDown = false;
   let oldVolume;
-  audio.volume = .5;
-  audio.onvolumechange = () => { fill.style.height = audio.volume * 100 + '%' };
+  audio.volume = localStorage.getItem('volume');
+  audio.onvolumechange = () => {
+    fill.style.height = audio.volume * 100 + '%';
+
+    if (audio.volume !== 0)
+      localStorage.setItem('volume', audio.volume);
+
+    if (audio.volume === 0)
+      icon.className = 'fa-fw fa-solid fa-volume-xmark';
+    else if (audio.volume <= 0.5)
+      icon.className = 'fa-fw fa-solid fa-volume-low';
+    else icon.className = 'fa-fw fa-solid fa-volume-high';
+  };
 
   cover.addEventListener('click', (e) => e.stopPropagation());
 
   volumeBtn.onclick = () => {
     if (audio.volume === 0) {
-      icon.className = 'fa-fw fa-solid fa-volume-high';
       audio.volume = oldVolume;
     } else {
       oldVolume = audio.volume;
       audio.volume = 0;
-      icon.className = 'fa-fw fa-solid fa-volume-xmark';
     }
   };
   
   volumeBtn.onmouseover = () => {
     clip.style.display = 'flex';
-    panel.style.display = 'flex';
     panel.style.animation = 'slideIn .3s ease';
   };
 
@@ -208,10 +219,6 @@ function handleVolumeButton() {
     if (cur < 0) cur = 0;
     else if (cur > 100) cur = 100;
 
-    if (cur === 0)
-      icon.className = 'fa-fw fa-solid fa-volume-xmark';
-    else icon.className = 'fa-fw fa-solid fa-volume-high';
-    
     fill.style.height = cur + '%';
     audio.volume = cur / 100;
   };
@@ -283,12 +290,14 @@ function handleAutoPlay() {
       playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
       audio.currentTime = 0;
       audio.play();
-    } else if (currentIndex === maxIndex) {
-      oldIndex = maxIndex;
-      currentIndex = 0;
-      loadAudio();
-      playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
-      audio.play();
+    } else {
+      if (currentIndex === maxIndex) {
+        oldIndex = maxIndex;
+        currentIndex = 0;
+        loadAudio();
+        playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+        audio.play();
+      } else nextSong();
     }
   };
 }
