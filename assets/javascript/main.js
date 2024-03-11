@@ -9,6 +9,14 @@ let currentIndex = 0;
 let oldIndex = 0;
 let maxIndex = songs.length - 1;
 let repeatStatus = 'off';
+let shuffleStatus = 'off';
+let songsOrder = [];
+let rsongsOrder = [];
+
+for (let i = 0; i <= maxIndex; ++i) {
+  songsOrder.push(i);
+  rsongsOrder.push(i);
+}
 
 function togglePlayBtn() {
   const playingSong = document.querySelector('.song--playing');
@@ -25,7 +33,10 @@ function togglePlayBtn() {
 }
 
 function renderSongs() {
-  songs.forEach((song, index) => {
+  listContent.innerHTML = '';
+
+  songsOrder.forEach((index) => {
+    let song = songs[index];
     const songElement = document.createElement('div');
     songElement.className = `song song${index}`;
     songElement.innerHTML = `
@@ -98,14 +109,21 @@ function formatDuration(sec) {
 
 function loadAudio() {
   const currentSong = songs[currentIndex];
+
   currentAudioTime.innerHTML = '0:00';
   audio.src = currentSong.path;
   document.querySelector('.content__img').src = currentSong.image;
   document.querySelector('.content__title').innerHTML = currentSong.name;
   document.querySelector('.content__author').innerHTML = currentSong.author;
 
-  document.querySelector(`.song${oldIndex}`).classList.remove('song--playing');
-  document.querySelector(`.song${currentIndex}`).classList.add('song--playing');
+  
+  const oldSong = document.querySelector(`.song${oldIndex}`);
+  const newSong = document.querySelector(`.song${currentIndex}`);
+  oldSong.classList.remove('song--playing');
+  newSong.classList.add('song--playing');
+  oldSong.querySelector('i').className = 'fa-solid fa-play';
+  if (currentIndex !== oldIndex)
+    newSong.querySelector('i').className = 'fa-solid fa-pause';
 
   audio.addEventListener('loadeddata', () => {
     document.querySelector('.progress__total').innerHTML = formatDuration(audio.duration);
@@ -243,19 +261,27 @@ function handleVolumeButton() {
 }
 
 function nextSong() {
-  if (currentIndex !== maxIndex) {
-    oldIndex = currentIndex;
-    ++currentIndex;
+  oldIndex = currentIndex;
+  if (currentIndex === songsOrder[maxIndex] && repeatStatus === 'all') {
+    currentIndex = songsOrder[0];
+  } else if (currentIndex !== songsOrder[maxIndex]) {
+    currentIndex = songsOrder[rsongsOrder[currentIndex] + 1];
+  }
+  if (oldIndex !== currentIndex) {
     loadAudio();
     playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
-    audio.play(); 
+    audio.play();
   }
 }
 
 function previousSong() {
-  if (currentIndex !== 0) {
-    oldIndex = currentIndex;
-    --currentIndex;
+  oldIndex = currentIndex;
+  if (currentIndex === songsOrder[0] && repeatStatus === 'all') {
+    currentIndex = songsOrder[maxIndex];
+  } else if (currentIndex !== songsOrder[0]) {
+    currentIndex = songsOrder[rsongsOrder[currentIndex] - 1];
+  }
+  if (oldIndex !== currentIndex) {
     loadAudio();
     playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
     audio.play();
@@ -282,23 +308,48 @@ function handleRepeatButton() {
 
 function handleAutoPlay() {
   audio.onended = () => {
-    if (repeatStatus === 'off') {
-      if (currentIndex === maxIndex)
-        playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-play"></i>';
-      else nextSong();
-    } else if (repeatStatus === 'one') {
-      playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
+    if (repeatStatus === 'one') {
       audio.currentTime = 0;
       audio.play();
+    } else nextSong();
+  };
+}
+
+function handleShuffleButton() {
+  const shuffleBtn = document.querySelector('.shuffle');
+
+  shuffleBtn.onclick = () => {
+    if (shuffleStatus === 'off') {
+      shuffleStatus = 'on';
+      shuffleBtn.style.color = 'black';
+      
+      let remainSize = maxIndex - currentIndex;
+      let remain = songsOrder.slice(currentIndex + 1);
+      songsOrder = songsOrder.slice(0, currentIndex + 1);
+      
+      for (let i = remainSize; i >= 1; --i) {
+        let tmp = Math.floor(Math.random() * i);
+        songsOrder.push(remain[tmp]);
+        remain.splice(tmp, 1);
+      }
     } else {
-      if (currentIndex === maxIndex) {
-        oldIndex = maxIndex;
-        currentIndex = 0;
-        loadAudio();
-        playBtn.innerHTML = '<i class="fa-fw fa-solid fa-circle-pause"></i>';
-        audio.play();
-      } else nextSong();
+      shuffleStatus = 'off';
+      shuffleBtn.style.color = 'gray';
+      songsOrder = [];
+      for (let i = 0; i <= maxIndex; ++i)
+        songsOrder.push(i);
     }
+
+    rsongsOrder = [];
+    for (let i = 0; i <= maxIndex; ++i) {
+      rsongsOrder[songsOrder[i]] = i;
+    }
+
+    renderSongs();
+    const playingSong = document.querySelector(`.song${currentIndex}`);
+    playingSong.classList.add('song--playing');
+    if (!audio.paused)
+      playingSong.querySelector('i').className = 'fa-solid fa-pause';
   };
 }
 
@@ -307,8 +358,9 @@ function start() {
   loadAudio();
   // handleProgressBar() is called inside loadAudio() function because i need to get the audio duration
   handleRepeatButton();
-  handleAutoPlay();
   handleVolumeButton();
+  handleShuffleButton();
+  handleAutoPlay();
   handleListAnimation();
   playBtn.onclick = togglePlayBtn;
   document.querySelector('.next').onclick = nextSong;
